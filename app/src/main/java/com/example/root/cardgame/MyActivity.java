@@ -25,7 +25,6 @@ public class MyActivity extends Activity {
     private int flipCount = 0;
     private int mNumberOfCardsToCompare = TWO_CARD_GAME_MATCH_COUNT;
     private int score = 0;
-    int count;
 
     // "Outlets"
 
@@ -33,6 +32,7 @@ public class MyActivity extends Activity {
     private TextView flipCountView;
     private TextView scoreCountView;
     private TextView activityView;
+    int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class MyActivity extends Activity {
         cardButtons = new ArrayList<Button>();
 
         ViewGroup buttonGrid = (ViewGroup) findViewById(R.id.gridLayout);
-        int count = buttonGrid.getChildCount();
+        count = buttonGrid.getChildCount();
 
         for (int i = 0; i < count; i++) {
             cardButtons.add((Button) buttonGrid.getChildAt(i));
@@ -51,10 +51,11 @@ public class MyActivity extends Activity {
         flipCountView = (TextView) findViewById(R.id.flipCount);
         scoreCountView = (TextView) findViewById(R.id.scoreView);
         activityView = (TextView) findViewById(R.id.activityView);
-        drawDeck(count);
+        drawDeck();
     }
 
-    public void drawDeck(int numberOfCards) {
+    public void drawDeck() {
+        int numberOfCards = count;
         PlayingCardDeck playingCardDeck = new PlayingCardDeck();
 
         cardMap = new HashMap<Button, PlayingCard>();
@@ -62,6 +63,18 @@ public class MyActivity extends Activity {
         for (int i = 0; i < numberOfCards; i++) {
             cardMap.put(cardButtons.get(i), (PlayingCard) playingCardDeck.drawRandomCard());
         }
+    }
+
+    public void drawDeckButton(View v) {
+        int numberOfCards = count;
+        PlayingCardDeck playingCardDeck = new PlayingCardDeck();
+
+        cardMap = new HashMap<Button, PlayingCard>();
+
+        for (int i = 0; i < numberOfCards; i++) {
+            cardMap.put(cardButtons.get(i), (PlayingCard) playingCardDeck.drawRandomCard());
+        }
+        updateUI();
     }
 
 
@@ -98,8 +111,7 @@ public class MyActivity extends Activity {
                 if (currentCard.redBlackColor == 0){cardImageButton.setTextColor(Color.BLACK);}
                 else {cardImageButton.setTextColor(Color.RED);}
             }
-            // Configure activity label (report of last action)
-            activityView.setText("You chose: " + currentCard.getContents());
+
         }
 
         // Configure flip-count label
@@ -114,8 +126,14 @@ public class MyActivity extends Activity {
     public void flipOneCard(View v) {
         Button clickedButton = (Button) v;
 
-        // use clickedButton to get the Model card object for this button
+    // use clickedButton to get the Model card object for this button
         PlayingCard card = cardMap.get(clickedButton);
+
+    // Configure activity label (report of last action)
+        activityView.setText("You chose: " + card.getContents());
+
+        if (card.redBlackColor == 0){activityView.setTextColor(Color.BLACK);}
+            else {activityView.setTextColor(Color.RED);}
 
         card.faceUp = (!card.isFaceUp());
         ++flipCount;
