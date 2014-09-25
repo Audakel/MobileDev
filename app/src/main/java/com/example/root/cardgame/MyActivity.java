@@ -3,6 +3,9 @@ package com.example.root.cardgame;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -11,6 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MyActivity extends Activity {
     // Constants
@@ -25,6 +30,10 @@ public class MyActivity extends Activity {
     private int flipCount = 0;
     private int mNumberOfCardsToCompare = TWO_CARD_GAME_MATCH_COUNT;
     private int score = 0;
+    private PlayingCard firstDraw = null;
+    private PlayingCard secondDraw = null;
+    private PlayingCard activityLogCard;
+    private PlayingCard activityLogCard2;
 
     // "Outlets"
 
@@ -32,6 +41,7 @@ public class MyActivity extends Activity {
     private TextView flipCountView;
     private TextView scoreCountView;
     private TextView activityView;
+    private TextView activityView2;
     int count;
 
     @Override
@@ -51,8 +61,10 @@ public class MyActivity extends Activity {
         flipCountView = (TextView) findViewById(R.id.flipCount);
         scoreCountView = (TextView) findViewById(R.id.scoreView);
         activityView = (TextView) findViewById(R.id.activityView);
+        activityView2 = (TextView) findViewById(R.id.activityView2);
         drawDeck();
     }
+
 
     public void drawDeck() {
         int numberOfCards = count;
@@ -65,6 +77,7 @@ public class MyActivity extends Activity {
         }
     }
 
+
     public void drawDeckButton(View v) {
         int numberOfCards = count;
         PlayingCardDeck playingCardDeck = new PlayingCardDeck();
@@ -74,6 +87,11 @@ public class MyActivity extends Activity {
         for (int i = 0; i < numberOfCards; i++) {
             cardMap.put(cardButtons.get(i), (PlayingCard) playingCardDeck.drawRandomCard());
         }
+
+        score = 0;
+        flipCount = 0;
+        firstDraw = null;
+        secondDraw = null;
         updateUI();
     }
 
@@ -91,7 +109,7 @@ public class MyActivity extends Activity {
             if (currentCard.faceUp){
                 cardImageButton.setBackgroundResource(R.drawable.blankplayingcard);
                 cardImageButton.setText(currentCard.getContents());
-
+                //cardImageButton.getBackground().setAlpha(255);
                 if (currentCard.redBlackColor == 0){cardImageButton.setTextColor(Color.BLACK);}
                     else {cardImageButton.setTextColor(Color.RED);}
                 }
@@ -103,14 +121,46 @@ public class MyActivity extends Activity {
             }
 
         //if unplayable
-            if (currentCard.unplayable){
+            if (currentCard.unplayable) {
                 cardImageButton.setBackgroundResource(R.drawable.blankplayingcard);
                 cardImageButton.setText(currentCard.getContents());
-                cardImageButton.setAlpha(128);
+                cardImageButton.setAlpha(50);
 
-                if (currentCard.redBlackColor == 0){cardImageButton.setTextColor(Color.BLACK);}
-                else {cardImageButton.setTextColor(Color.RED);}
+                if (currentCard.redBlackColor == 0){cardImageButton.setTextColor(Color.GRAY);}
+                    else {cardImageButton.setTextColor(Color.rgb(255,102,102));}
+
             }
+        // Configure activity label (report of last action)
+            if (activityLogCard != null){
+
+                if (activityLogCard.redBlackColor == 0){activityView.setTextColor(Color.BLACK);}
+                    else {activityView.setTextColor(Color.RED);}
+
+                activityView.setText("You chose: " + activityLogCard.getContents());
+                {
+                    final Pattern p = Pattern.compile("You chose:");
+                    final Matcher matcher = p.matcher(activityView.getText());
+
+                    final SpannableStringBuilder spannable = new SpannableStringBuilder(activityView.getText());
+                    final ForegroundColorSpan span = new ForegroundColorSpan(Color.WHITE);
+                    while (matcher.find()) {
+                        spannable.setSpan(
+                                span, matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        );
+                    }
+                    activityView.setText(spannable);
+                }
+            }
+        // Configure activity label2 (report of last action)
+//            if (activityLogCard2 != null){
+//                activityView2.setText("You chose: " + firstDraw.getContents());
+//
+//                if (activityLogCard2.redBlackColor == 0){
+//                        activityView2.setTextColor(Color.BLACK);
+//                }
+//                else {activityView2.setTextColor(Color.RED);}
+//            }
+
 
         }
 
@@ -125,20 +175,35 @@ public class MyActivity extends Activity {
 
     public void flipOneCard(View v) {
         Button clickedButton = (Button) v;
-
     // use clickedButton to get the Model card object for this button
         PlayingCard card = cardMap.get(clickedButton);
 
-    // Configure activity label (report of last action)
-        activityView.setText("You chose: " + card.getContents());
-
-        if (card.redBlackColor == 0){activityView.setTextColor(Color.BLACK);}
-            else {activityView.setTextColor(Color.RED);}
-
+        activityLogCard = card;
+        activityLogCard2 = firstDraw;
+        firstDraw = secondDraw;
+        secondDraw = card;
         card.faceUp = (!card.isFaceUp());
+        if (!card.faceUp){
+            activityLogCard = null;
+            secondDraw = null;
+            ++score;
+        }
         ++flipCount;
+        --score;
+        checkMatchReturnScore();
         updateUI();
 
         // Modify model, then call updateUI()
     }
+
+
+    public void checkMatchReturnScore(){
+        if (firstDraw != null && secondDraw != null){
+            int updatedScore = firstDraw.compareCardsReturnScore(secondDraw);
+            score += updatedScore;
+            firstDraw = null;
+            secondDraw = null;
+        }
+    }
+
 }

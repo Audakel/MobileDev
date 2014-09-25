@@ -174,15 +174,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="CardChoice"
+        android:text="CardChoice1"
         android:id="@+id/activityView"
         android:layout_toStartOf="@+id/textView"
-        android:layout_toEndOf="@+id/redrawButton"
-        android:layout_toLeftOf="@+id/textView"
+        android:layout_toEndOf="@+id/scoreView"
         android:singleLine="false"
-        android:layout_above="@+id/textView"
-        android:layout_alignLeft="@+id/scoreView"
-        android:layout_alignStart="@+id/scoreView" />
+        android:layout_below="@+id/gridLayout"
+        android:paddingLeft="50dp"
+        android:padding="10dp"
+        android:layout_toRightOf="@+id/scoreView"
+        android:layout_toLeftOf="@+id/textView"
+        android:textColor="#c8ffffff" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -191,12 +193,8 @@
         android:text="Flips: 0"
         android:id="@+id/flipCount"
         android:textColor="@android:color/white"
-        android:layout_toStartOf="@+id/scoreView"
-        android:layout_below="@+id/gridLayout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/scoreView"
-        android:layout_above="@+id/activityView" />
+        android:padding="2dp"
+        android:layout_alignTop="@+id/textView" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -205,11 +203,11 @@
         android:text="Score: 0"
         android:id="@+id/scoreView"
         android:textColor="#ffffffff"
-        android:layout_alignBaseline="@+id/cardSwitch"
-        android:layout_alignBottom="@+id/cardSwitch"
-        android:layout_toRightOf="@+id/redrawButton"
-        android:layout_toEndOf="@+id/redrawButton"
-        android:layout_marginLeft="35dp" />
+
+        android:padding="2dp"
+        android:layout_above="@+id/flipCount"
+        android:layout_alignLeft="@+id/flipCount"
+        android:layout_alignStart="@+id/flipCount" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -217,13 +215,12 @@
         android:layout_height="wrap_content"
         android:text="Re-Deal"
         android:id="@+id/redrawButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignBottom="@+id/cardSwitch"
-        android:layout_alignTop="@+id/cardSwitch"
         android:textSize="10dp"
         android:background="@android:color/darker_gray"
-        android:onClick="drawDeckButton" />
+        android:onClick="drawDeckButton"
+        android:layout_alignTop="@+id/cardSwitch"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Switch
         android:layout_width="wrap_content"
@@ -246,7 +243,24 @@
         android:id="@+id/textView"
         android:layout_above="@+id/cardSwitch"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" /><![CDATA[
+        android:layout_alignParentEnd="true"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="CardChoice2"
+        android:id="@+id/activityView2"
+        android:layout_toStartOf="@+id/textView"
+        android:layout_toEndOf="@+id/scoreView"
+        android:singleLine="false"
+        android:paddingLeft="50dp"
+        android:padding="10dp"
+        android:layout_below="@+id/activityView"
+        android:layout_alignLeft="@+id/activityView"
+        android:layout_alignStart="@+id/activityView"
+        android:textColor="#c8ffffff" /><![CDATA[
 
 
 

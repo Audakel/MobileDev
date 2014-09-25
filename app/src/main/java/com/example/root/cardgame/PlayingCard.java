@@ -19,7 +19,7 @@ public class PlayingCard extends Card {
 
 
     public static String[] rankStrings() {
-        String[] s = {"?", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+        String[] s = {"6", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
         return s;
     }
 
@@ -46,19 +46,25 @@ public class PlayingCard extends Card {
         int MISMATCH_PENALTY = 1;
         int score = 0;
 
-        PlayingCard card1 = this;
-
-        if (card1.suit.equals(cardToCompare.suit)) {
+        if (this.suit.equals(cardToCompare.suit)) {
             score += SUIT_MATCH_BONUS;
-            card1.unplayable = true;
+            cardToCompare.unplayable = true;
             this.unplayable = true;
         } else score -= MISMATCH_PENALTY;
 
-        if (card1.rankReturn.equals(cardToCompare.rankReturn)) {
+        if (this.rank == (cardToCompare.rank)) {
             score += RANK_MATCH_BONUS;
-            card1.unplayable = true;
+            cardToCompare.unplayable = true;
             this.unplayable = true;
-        } else score -= MISMATCH_PENALTY;
+        }
+
+        if (!(this.rank == (cardToCompare.rank)) && !(this.suit.equals(cardToCompare.suit))){
+            score -= MISMATCH_PENALTY;
+            //this.faceUp = false;
+            //cardToCompare.faceUp = false;
+            cardToCompare.unplayable = false;
+            this.unplayable = false;
+        }
 
         return score;
     }
