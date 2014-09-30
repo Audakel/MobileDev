@@ -26,7 +26,7 @@ public class MyActivity extends Activity {
     // Instance variables
 
     private Map<Button, PlayingCard> cardMap;
-    private int countCardsUp = 0;
+    private int countCardsUp = 0;//
     private int flipCount = 0;
     private int mNumberOfCardsToCompare = TWO_CARD_GAME_MATCH_COUNT;
     private int score = 0;
